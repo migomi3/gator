@@ -10,7 +10,9 @@ type Config struct {
 	CurrentUserName string `json:"current_user_name"`
 }
 
-const configURL = ".gatorconfig.json"
+const configFileName = "/.gatorconfig.json"
+
+var configURL = os.Getenv("HOME") + configFileName
 
 func ReadConfig() (Config, error) {
 	jsonFile, err := os.Open(configURL)
