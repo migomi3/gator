@@ -17,6 +17,9 @@ func main() {
 	}
 
 	db, err := sql.Open("postgres", c.DbURL)
+	if err != nil {
+		log.Fatal(err)
+	}
 	dbQueries := database.New(db)
 
 	s := state{
