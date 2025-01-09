@@ -11,3 +11,8 @@ SELECT f.name, url, u.name AS creator
 FROM feeds f
 LEFT JOIN users u
 ON f.user_id = u.id;
+
+-- name: GetFeed :one
+SELECT *
+FROM feeds
+WHERE url = $1;
