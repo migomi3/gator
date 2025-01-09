@@ -38,6 +38,7 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
@@ -52,11 +53,13 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 	return &rssFeed, nil
 }
 
-func unEscapeFeed(feed *RSSFeed) {
-	html.UnescapeString(feed.Channel.Title)
-	html.UnescapeString(feed.Channel.Description)
+func unEscapeFeed(feed *RSSFeed) *RSSFeed {
+	feed.Channel.Title = html.UnescapeString(feed.Channel.Title)
+	feed.Channel.Description = html.UnescapeString(feed.Channel.Description)
 	for _, item := range feed.Channel.Item {
-		html.EscapeString(item.Title)
-		html.EscapeString(item.Description)
+		item.Title = html.EscapeString(item.Title)
+		item.Description = html.EscapeString(item.Description)
 	}
+
+	return feed
 }
