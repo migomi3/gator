@@ -81,16 +81,21 @@ func handlerUsers(s *state, cmd command) error {
 }
 
 func handlerAgg(s *state, cmd command) error {
-	url := "https://www.wagslane.dev/index.xml"
+	if len(cmd.args) < 1 {
+		return errors.New("missing argument for time between reps")
+	}
 
-	feed, err := fetchFeed(context.Background(), url)
+	duration, err := time.ParseDuration(cmd.args[0])
 	if err != nil {
 		return nil
 	}
 
-	feed = unEscapeFeed(feed)
+	fmt.Printf("Collecting feeds every %s\n", cmd.args[0])
 
-	fmt.Println(feed)
+	ticker := time.NewTicker(duration)
+	for ; ; <-ticker.C {
+		scrapeFeeds(s)
+	}
 
 	return nil
 }
