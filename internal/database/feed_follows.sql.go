@@ -86,7 +86,7 @@ func (q *Queries) DeleteFeedFollow(ctx context.Context, arg DeleteFeedFollowPara
 }
 
 const getFeedFollowsForUser = `-- name: GetFeedFollowsForUser :many
-SELECT ff.id, ff.created_at, ff.updated_at, ff.user_id, feed_id, u.id, u.created_at, u.updated_at, u.name, f.id, f.created_at, f.updated_at, last_fetched_at, f.name, url, f.user_id, u.name AS user_name, f.name AS feed_name
+SELECT ff.id, ff.created_at, ff.updated_at, ff.user_id, feed_id, u.id, u.created_at, u.updated_at, u.name, f.id, f.created_at, f.updated_at, f.name, url, f.user_id, last_fetched_at, u.name AS user_name, f.name AS feed_name
 FROM feed_follows ff
 INNER JOIN users u
 ON ff.user_id = u.id
@@ -108,10 +108,10 @@ type GetFeedFollowsForUserRow struct {
 	ID_3          uuid.UUID
 	CreatedAt_3   time.Time
 	UpdatedAt_3   time.Time
-	LastFetchedAt sql.NullTime
 	Name_2        string
 	Url           string
 	UserID_2      uuid.UUID
+	LastFetchedAt sql.NullTime
 	UserName      string
 	FeedName      string
 }
@@ -138,10 +138,10 @@ func (q *Queries) GetFeedFollowsForUser(ctx context.Context, id uuid.UUID) ([]Ge
 			&i.ID_3,
 			&i.CreatedAt_3,
 			&i.UpdatedAt_3,
-			&i.LastFetchedAt,
 			&i.Name_2,
 			&i.Url,
 			&i.UserID_2,
+			&i.LastFetchedAt,
 			&i.UserName,
 			&i.FeedName,
 		); err != nil {
